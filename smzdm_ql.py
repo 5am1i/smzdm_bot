@@ -1,6 +1,6 @@
 """
 什么值得买自动签到脚本
-项目地址: https://github.com/Chasing66/smzdm_bot
+项目地址: https://github.com/5am1i/smzdm_bot/
 0 9 * * * smzdm_ql.py
 const $ = new Env("什么值得买签到");
 """
@@ -10,13 +10,35 @@ import sys
 from pathlib import Path
 
 ql_repo_dir = Path("/ql/data/repo/")
-repo_name = "Chasing66_smzdm_bot"
+repo_name = "5am1i_smzdm_bot"
 repo_dir = Path(ql_repo_dir, repo_name)
 
 
 def main():
     # 切换到项目目录
     os.chdir(str(repo_dir))
+    
+    # 兼容青龙平台的环境变量命名
+    # 将 ANDROID_COOKIE 映射到 SMZDM_COOKIE
+    if "ANDROID_COOKIE" in os.environ and "SMZDM_COOKIE" not in os.environ:
+        os.environ["SMZDM_COOKIE"] = os.environ["ANDROID_COOKIE"]
+    
+    # 兼容其他环境变量
+    env_mapping = {
+        "SK": "SMZDM_SK",
+        "PUSH_PLUS_TOKEN": "SMZDM_PUSH_PLUS_TOKEN",
+        "SC_KEY": "SMZDM_SC_KEY",
+        "WECOM_BOT_WEBHOOK": "SMZDM_WECOM_WEBHOOK",
+        "TG_BOT_TOKEN": "SMZDM_TG_BOT_TOKEN",
+        "TG_USER_ID": "SMZDM_TG_USER_ID",
+        "TG_BOT_API": "SMZDM_TG_API_BASE",
+        "SCH_HOUR": "SMZDM_SCH_HOUR",
+        "SCH_MINUTE": "SMZDM_SCH_MINUTE",
+    }
+    
+    for old_key, new_key in env_mapping.items():
+        if old_key in os.environ and new_key not in os.environ:
+            os.environ[new_key] = os.environ[old_key]
     
     # 添加 src 目录到 Python 路径
     src_dir = repo_dir / "src"
