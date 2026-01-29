@@ -145,6 +145,11 @@ class Settings(BaseSettings):
     def get_users(self) -> list[UserConfig]:
         """Get list of user configurations.
 
+        Supports multiple formats:
+        1. SMZDM_USERS (JSON array): '[{"cookie": "...", "sk": "...", "name": "..."}]'
+        2. SMZDM_USER1_COOKIE, SMZDM_USER2_COOKIE, ... (numbered format)
+        3. SMZDM_COOKIE (single user fallback)
+
         Returns:
             List of UserConfig objects.
 
@@ -153,7 +158,7 @@ class Settings(BaseSettings):
         """
         users: list[UserConfig] = []
 
-        # Try multi-user mode first
+        # Method 1: Try JSON format (SMZDM_USERS)
         if self.users:
             try:
                 users_data = json.loads(self.users)
@@ -173,7 +178,32 @@ class Settings(BaseSettings):
                     details={"users": self.users[:100]},
                 ) from e
 
-        # Fall back to single user mode
+        # Method 2: Try numbered format (SMZDM_USER1_COOKIE, SMZDM_USER2_COOKIE, ...)
+        # This requires accessing the raw environment variables
+        if not users:
+            import os
+            user_num = 1
+            while True:
+                cookie_key = f"SMZDM_USER{user_num}_COOKIE"
+                cookie = os.environ.get(cookie_key, "").strip()
+                if not cookie:
+                    break  # No more users
+
+                sk_key = f"SMZDM_USER{user_num}_SK"
+                name_key = f"SMZDM_USER{user_num}_NAME"
+                sk = os.environ.get(sk_key, "").strip()
+                name = os.environ.get(name_key, "").strip() or f"User{user_num}"
+
+                users.append(
+                    UserConfig(
+                        cookie=cookie,
+                        sk=sk,
+                        name=name,
+                    )
+                )
+                user_num += 1
+
+        # Method 3: Fall back to single user mode (SMZDM_COOKIE)
         if not users and self.cookie:
             users.append(
                 UserConfig(
@@ -185,7 +215,7 @@ class Settings(BaseSettings):
 
         if not users:
             raise ConfigurationError(
-                "No users configured. Set SMZDM_COOKIE or SMZDM_USERS environment variable.",
+                "No users configured. Set SMZDM_COOKIE, SMZDM_USERS, or SMZDM_USER1_COOKIE environment variable.",
             )
 
         return users
