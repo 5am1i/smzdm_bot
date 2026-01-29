@@ -7,8 +7,11 @@
     <img src="https://img.shields.io/docker/pulls/enwaiax/smzdm_bot">
 </p>
 
+项目地址：[https://github.com/5am1i/smzdm_bot/](https://github.com/5am1i/smzdm_bot/)（Fork 自 [Chasing66/smzdm_bot](https://github.com/Chasing66/smzdm_bot)）
+
 ## 更新日志
 
+- 2026-01-28, 仓库迁移至 [5am1i/smzdm_bot](https://github.com/5am1i/smzdm_bot/)；青龙订阅命令、Cookie 环境变量兼容（ANDROID_COOKIE）、Python 版本兼容（≥3.9）及黑名单说明已更新
 - 2024-xx-xx, 重构项目，使用 src layout 和 uv 管理依赖
 - 2023-04-23，更新抽奖功能
 - 2023-04-06, 新增企业微信BOT-WEBHOOK通知推送方式，仅需要`ANDROID_COOKIE`一个变量, `SK`改为可选变量
@@ -76,7 +79,7 @@ SCH_MINUTE=
 
 ### 3.2 从`config.toml`中读取
 
-参考模板 [src/smzdm_bot/config/config_example.toml](https://github.com/Chasing66/smzdm_bot/blob/main/src/smzdm_bot/config/config_example.toml)
+参考模板 [src/smzdm_bot/config/config_example.toml](https://github.com/5am1i/smzdm_bot/blob/main/src/smzdm_bot/config/config_example.toml)
 
 ```toml
 [user.A]
@@ -102,17 +105,17 @@ TG_BOT_API = ""
 
 ### 4.1 青龙面板
 
-```
-ql repo https://github.com/Chasing66/smzdm_bot.git "smzdm_ql.py"
+```bash
+ql repo https://github.com/5am1i/smzdm_bot.git "smzdm_ql.py"
 ```
 
 默认情况下从环境变量读取配置,仅支持单用户.
 
 如果需要支持多用户，推荐使用`config.toml`, 配置参考 [3.2 从`config.toml`中读取](#32-从configtoml中读取).
-配置完成后, 拷贝`config.toml`到青龙容器内的`/ql/data/repo/Chasing66_smzdm_bot/src/smzdm_bot/config`
+配置完成后, 拷贝`config.toml`到青龙容器内的`/ql/data/repo/5am1i_smzdm_bot/src/smzdm_bot/config`
 
 ```
-docker cp config.toml <你的青龙容器名称>:/ql/data/repo/Chasing66_smzdm_bot/src/smzdm_bot/config
+docker cp config.toml <你的青龙容器名称>:/ql/data/repo/5am1i_smzdm_bot/src/smzdm_bot/config
 ```
 
 ### 4.2 本地直接运行 (推荐使用 uv)
@@ -126,7 +129,7 @@ docker cp config.toml <你的青龙容器名称>:/ql/data/repo/Chasing66_smzdm_b
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # 克隆并安装
-git clone https://github.com/Chasing66/smzdm_bot.git
+git clone https://github.com/5am1i/smzdm_bot.git
 cd smzdm_bot
 uv sync
 
@@ -144,7 +147,7 @@ uv run smzdm-scheduler
 **使用 pip**
 
 ```bash
-git clone https://github.com/Chasing66/smzdm_bot.git
+git clone https://github.com/5am1i/smzdm_bot.git
 cd smzdm_bot
 python3 -m venv .venv
 source .venv/bin/activate
@@ -198,7 +201,7 @@ services:
 
 GitHub Action 仅支持`env`配置方式, **务必自行更改为随机时间**
 
-1. Fork[此仓库项目](https://github.com/Chasing66/smzdm_bot)>, 欢迎`star`~
+1. Fork[此仓库项目](https://github.com/5am1i/smzdm_bot)>, 欢迎`star`~
 2. 修改 `.github/workflows/checkin.yml`里的下面部分, 取消`schedule`两行的注释，自行设定时间
 
 ```yaml
@@ -226,4 +229,4 @@ schedule:
 
 ## 6. Stargazers over time
 
-[![Stargazers over time](https://starchart.cc/Chasing66/smzdm_bot.svg)](https://starchart.cc/Chasing66/smzdm_bot)
+[![Stargazers over time](https://starchart.cc/5am1i/smzdm_bot.svg)](https://starchart.cc/5am1i/smzdm_bot)
