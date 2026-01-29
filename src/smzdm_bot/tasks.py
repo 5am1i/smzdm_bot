@@ -153,13 +153,36 @@ class TaskRunner:
                 logger.info("无任务活动")
                 return 0
 
-            activity = rows[0].get("cell_data", {}).get("activity_task", {})
-            task_groups = activity.get("accumulate_list", {}).get("task_list_v2", [])
+            first_row = rows[0]
+            if not isinstance(first_row, dict):
+                logger.info("无任务活动(结构异常)")
+                return 0
+
+            cell_data = first_row.get("cell_data") or {}
+            activity = (cell_data if isinstance(cell_data, dict) else {}).get("activity_task") or {}
+            if not isinstance(activity, dict):
+                logger.info("无任务活动")
+                return 0
+
+            accumulate = activity.get("accumulate_list")
+            if isinstance(accumulate, list):
+                task_groups = accumulate
+            elif isinstance(accumulate, dict):
+                task_groups = accumulate.get("task_list_v2") or []
+            else:
+                task_groups = []
 
             completed = 0
             for group in task_groups:
-                for task in group.get("task_list", []):
-                    completed += self._process_task(task)
+                if isinstance(group, dict):
+                    task_list = group.get("task_list") or []
+                elif isinstance(group, list):
+                    task_list = group
+                else:
+                    task_list = []
+                for task in task_list:
+                    if isinstance(task, dict):
+                        completed += self._process_task(task)
 
             logger.info(f"完成任务: {completed}")
             return completed
