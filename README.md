@@ -59,7 +59,7 @@ smzdm_bot/
 
 ```conf
 # Cookie
-ANDROID_COOKIE = ""
+SMZDM_COOKIE = ""
 SK = "" # 可选，如果抓包抓到最好设置
 
 # Notification
