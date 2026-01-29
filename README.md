@@ -57,25 +57,65 @@ smzdm_bot/
 
 ### 3.1 从环境变量中读取配置
 
+#### 单用户模式
+
 ```conf
 # Cookie
 SMZDM_COOKIE = ""
-SK = "" # 可选，如果抓包抓到最好设置
+SMZDM_SK = "" # 可选，如果抓包抓到最好设置
 
 # Notification
-PUSH_PLUS_TOKEN = ""
-SC_KEY = ""
-WECOM_BOT_WEBHOOK = ""
-TG_BOT_TOKEN = ""
-TG_USER_ID = ""
+SMZDM_PUSH_PLUS_TOKEN = ""
+SMZDM_SC_KEY = ""
+SMZDM_WECOM_WEBHOOK = ""
+SMZDM_TG_BOT_TOKEN = ""
+SMZDM_TG_USER_ID = ""
 
 # 用于自定义反代的Telegram Bot API(按需设置)
-TG_BOT_API = ""
+SMZDM_TG_API_BASE = ""
 
 # 用于docker运行的定时设定(可选)，未设定则随机定时执行
-SCH_HOUR=
-SCH_MINUTE=
+SMZDM_SCH_HOUR=
+SMZDM_SCH_MINUTE=
 ```
+
+#### 多用户模式（方式一：编号格式，推荐）
+
+在青龙等平台中，使用编号格式更易配置：
+
+```conf
+# 用户1
+SMZDM_USER1_COOKIE = "cookie1"
+SMZDM_USER1_SK = "sk1"  # 可选
+SMZDM_USER1_NAME = "账号1"  # 可选，默认 User1
+
+# 用户2
+SMZDM_USER2_COOKIE = "cookie2"
+SMZDM_USER2_SK = "sk2"  # 可选
+SMZDM_USER2_NAME = "账号2"  # 可选，默认 User2
+
+# 用户3
+SMZDM_USER3_COOKIE = "cookie3"
+# ... 以此类推
+
+# 通知配置（所有用户共用）
+SMZDM_WECOM_WEBHOOK = ""
+SMZDM_PUSH_PLUS_TOKEN = ""
+# ... 其他通知配置
+```
+
+#### 多用户模式（方式二：JSON 格式）
+
+```conf
+# 多用户 JSON 格式（适合脚本或 docker-compose）
+SMZDM_USERS = '[{"cookie": "cookie1", "sk": "sk1", "name": "账号1"}, {"cookie": "cookie2", "sk": "sk2", "name": "账号2"}]'
+```
+
+**注意**：青龙平台也兼容旧的变量名（会自动映射）：
+- `ANDROID_COOKIE` → `SMZDM_COOKIE`
+- `SK` → `SMZDM_SK`
+- `WECOM_BOT_WEBHOOK` → `SMZDM_WECOM_WEBHOOK`
+- 等等...
 
 ### 3.2 从`config.toml`中读取
 
